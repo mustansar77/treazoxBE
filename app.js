@@ -11,7 +11,10 @@ connectDB();
 const app = express();
 // ✅ Enhanced CORS Configuration
 const corsOptions = {
-  origin:['https://treazox1.vercel.app/',"http://localhost:3000"]
+  origin:['https://treazox1.vercel.app/',"http://localhost:3000"],
+   methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  
 };
 app.use(cors(corsOptions));
 app.use(bodyParser.json());

@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
-// const { initializeDefaults } = require('./initializers');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGO_URI, {});
     console.log('MongoDB connected');
     
-    // Initialize superadmin after connection
+    // Initialize superadmin after connection if needed
     // await initializeDefaults();
   } catch (err) {
     console.error('Database connection error:', err.message);
