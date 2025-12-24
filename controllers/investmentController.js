@@ -117,7 +117,10 @@ exports.getDashboard = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    const investments = await Investment.find({ user: userId, status: "active" });
+    const investments = await Investment.find({
+      user: userId,
+      status: "active",
+    });
 
     const totalActivatedPlans = investments.length;
     const totalInvestment = investments.reduce((s, i) => s + i.amount, 0);
@@ -127,10 +130,18 @@ exports.getDashboard = async (req, res) => {
     const today = new Date();
 
     investments.forEach((inv) => {
-      const start = inv.startDate || today;
-      const end = inv.endDate < today ? inv.endDate : today;
+      if (!inv.startDate) return;
 
-      const days = Math.floor((end - start) / (1000 * 60 * 60 * 24));
+      const start = new Date(inv.startDate);
+      const end = inv.endDate && inv.endDate < today ? inv.endDate : today;
+
+      let days = Math.ceil(
+        (end - start) / (1000 * 60 * 60 * 24)
+      );
+
+      // ✅ minimum 1 day earning
+      days = Math.max(days, 1);
+
       totalEarnings += days * inv.dailyEarning;
     });
 
@@ -145,3 +156,4 @@ exports.getDashboard = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+

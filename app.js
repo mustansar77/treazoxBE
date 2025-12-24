@@ -9,11 +9,18 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
+// ✅ Enhanced CORS Configuration
+const corsOptions = {
+  origin:['https://treazox1.vercel.app/',"http://localhost:3000"]
+};
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
+
 
 // Routes
 const userRoutes = require("./routes/userRoute");
+const adminRoutes = require("./routes/adminRoutes");
+
 const planRoutes=require("./routes/planRoute")
 const dashboardRoutes = require("./routes/dashboardRoute");
 const balanceRoutes = require("./routes/balanceRoute");
@@ -27,6 +34,8 @@ app.use("/api/dashboard", dashboardRoutes);
 // admin balance management
 app.use("/api/balance", balanceRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/admin",adminRoutes );
+
 app.use("/api/plans", planRoutes);
 app.use("/api/user-plans",userPlanRoutes);
 app.use("/api/investments",investmentRoutes);
