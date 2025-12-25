@@ -11,15 +11,20 @@ connectDB();
 const app = express();
 
 // ✅ Proper CORS configuration
+// const corsOptions = {
+//   origin: [
+//     "https://treazox1.vercel.app", // no trailing slash
+//     "http://localhost:3000"
+//   ],
+//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+//   allowedHeaders: ["Content-Type", "Authorization"],
+//   credentials: true,
+// };
+
 const corsOptions = {
-  origin: [
-    "https://treazox1.vercel.app", // no trailing slash
-    "http://localhost:3000"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
+  origin:['https://treazox1.vercel.app',"http://localhost:3000"]
 };
+
 
 // Apply CORS middleware globally
 app.use(cors(corsOptions));
