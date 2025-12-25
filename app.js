@@ -10,50 +10,36 @@ connectDB();
 
 const app = express();
 
-// ✅ Proper CORS configuration
-// const corsOptions = {
-//   origin: [
-//     "https://treazox1.vercel.app", // no trailing slash
-//     "http://localhost:3000"
-//   ],
-//   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-//   allowedHeaders: ["Content-Type", "Authorization"],
-//   credentials: true,
-// };
-
+// ✅ CORS Config
 const corsOptions = {
-  origin:['https://treazox1.vercel.app',"http://localhost:3000"]
+  origin: ['https://treazox1.vercel.app', "http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: true,
 };
-
-
-// Apply CORS middleware globally
 app.use(cors(corsOptions));
 
-// Use body parser
+// ✅ Parse JSON body
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
 const userRoutes = require("./routes/userRoute");
-const adminRoutes = require("./routes/adminRoutes");
-const planRoutes = require("./routes/planRoute");
-const dashboardRoutes = require("./routes/dashboardRoute");
-const balanceRoutes = require("./routes/balanceRoute");
-const userPlanRoutes = require("./routes/userPlanRoute");
-const investmentRoutes = require("./routes/investmentRoute");
-const withdrawRoute = require("./routes/withdrawRoute");
-
-app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/balance", balanceRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/plans", planRoutes);
-app.use("/api/user-plans", userPlanRoutes);
-app.use("/api/investments", investmentRoutes);
-app.use("/api/withdraw", withdrawRoute);
 
-// Test route
+// Root route
 app.get("/", (req, res) => {
-  res.json({ status: "ok", message: "Treazox Backend is running 🚀" });
+  res.json({
+    status: "ok",
+    message: "Treazox Backend is running 🚀",
+  });
+});
+
+// Catch-all for unsupported methods on API routes
+app.all("/api/", (req, res, next) => {
+  if (req.method !== "POST" && req.method !== "GET" && req.method !== "PUT" && req.method !== "DELETE") {
+    return res.status(405).json({ message: "Method Not Allowed" });
+  }
+  next();
 });
 
 // Start server
