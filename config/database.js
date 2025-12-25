@@ -1,16 +1,24 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {});
-    console.log('MongoDB connected');
-    
-    // Initialize superadmin after connection if needed
-    // await initializeDefaults();
+    if (!process.env.MONGO_URI) {
+      throw new Error("MONGO_URI is not defined in environment variables");
+    }
+
+    await mongoose.connect(process.env.MONGO_URI);
+
+    console.log("MongoDB connected");
   } catch (err) {
-    console.error('Database connection error:', err.message);
-    process.exit(1);
+    console.error("Database connection error:", err.message);
+    process.exit(1); // Exit the process if DB connection fails
   }
 };
 
 module.exports = connectDB;
+
+
+
+
+
+
